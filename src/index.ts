@@ -1,24 +1,13 @@
-// puppeteer-extra is a drop-in replacement for puppeteer,
-// it augments the installed puppeteer with plugin functionality
-const puppeteer = require('puppeteer-extra');
+import dotenv from 'dotenv';
+import express from 'express';
+import router from './routes';
 
-const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-puppeteer.use(StealthPlugin());
+dotenv.config();
+const app = express();
 
-// puppeteer usage as normal
+app.use(express.json());
+app.use(router);
 
-
-(async () => {
-  const browser = await puppeteer.launch({ headless: false , userDataDir: './tmp/user' });
-  const page = await browser.newPage();
-  await page.setViewport({width: 1200, height: 720});
-  await page.goto('https://www.facebook.com');
-  // await page.type('#email', auth.username);
-  // await page.type('#pass', auth.password);
-  
-  // await Promise.all([
-  //   page.click('#u_0_k_21'),
-  // ]);
-
-  // await browser.close();
-})();
+app.listen(process.env.PORT, () => {
+  console.log(`server started on port ${process.env.PORT}`);
+});
